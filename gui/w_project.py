@@ -1,8 +1,7 @@
 
-
 from PySide6 import QtWidgets as Qw
 from PySide6.QtCore import Qt, Signal, QSize
-from PySide6.QtGui import QIcon
+from PySide6.QtGui import QIcon, QColor
 from fun import asset_file
 
 from lib.project_data import ProjectData, ProjectDataModule, ProjectDataAddress
@@ -157,6 +156,40 @@ class WProject(Qw.QWidget):
                 cell_value = Qw.QTableWidgetItem(addr.label)
                 self.table_data.setColumnWidth(3, 300)
                 
+                couleur_html = "#FFFFFF"
+                if addr.name == "reserved":
+                    couleur_html = "#E4E4E4"
+                else:
+                    match addr.type:
+                        case "SAFE INPUT":
+                            if addr.name[0] == "I":
+                                couleur_html = "#FFD8D8"
+                            else:
+                                couleur_html = "#FFF0D8"
+                        case "SAFE OUTPUT":
+                            if addr.name[0] == "O":
+                                couleur_html = "#FFD8D8"
+                            else:
+                                couleur_html = "#FFF0D8"
+                        case "INPUT":
+                            if addr.name[0] == "I":
+                                couleur_html = "#CAF8FF"
+                            elif addr.name[0] == "V":
+                                couleur_html = "#FFFFFF"
+                            else:
+                                couleur_html = "#FFF0D8"
+                        case "OUTPUT":
+                            if addr.name[0] == "O":
+                                couleur_html = "#CAFFCE"
+                            elif addr.name[0] == "V":
+                                couleur_html = "#FFFFFF"
+                            else:
+                                couleur_html = "#FFF0D8"
+
+                cell_address.setBackground(QColor(couleur_html))
+                cell_type.setBackground(QColor(couleur_html))
+                cell_name.setBackground(QColor(couleur_html))
+                cell_value.setBackground(QColor(couleur_html))
                 
                 cell_address.setFlags(Qt.ItemIsSelectable)
                 cell_type.setFlags(Qt.ItemIsSelectable)
@@ -170,6 +203,8 @@ class WProject(Qw.QWidget):
                 self.table_data.setItem(index, 2, cell_name)
                 self.table_data.setItem(index, 3, cell_value)
                 
+                
+
                 index += 1
         
         
