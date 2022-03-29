@@ -1,6 +1,5 @@
-from PySide6.QtWidgets import QWidget, QMessageBox, QGridLayout, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QPushButton, QListWidget, QListWidgetItem
-from PySide6.QtCore import Signal, Qt, QSize
-from PySide6.QtGui import QFont, QIcon
+from PySide6.QtWidgets import QWidget, QMessageBox, QVBoxLayout, QLabel, QLineEdit, QHBoxLayout, QListWidget, QListWidgetItem
+from PySide6.QtCore import Signal, Qt
 
 import os
 from gui.widgets import TextButton

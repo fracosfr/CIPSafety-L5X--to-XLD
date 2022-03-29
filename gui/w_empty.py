@@ -1,4 +1,4 @@
-from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFileDialog
+from PySide6.QtWidgets import QWidget, QHBoxLayout, QFileDialog
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
 from fun import asset_file

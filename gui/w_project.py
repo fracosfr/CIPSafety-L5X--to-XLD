@@ -4,7 +4,7 @@ from PySide6.QtCore import Qt, Signal, QSize
 from PySide6.QtGui import QIcon, QColor
 from fun import asset_file
 
-from lib.project_data import ProjectData, ProjectDataModule, ProjectDataAddress
+from lib.project_data import ProjectData
 from lib.xld_file import XldFile, XldLine, XldVar
 
 import os

@@ -1,7 +1,6 @@
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox
-from PySide6.QtCore import Qt
+from PySide6.QtWidgets import QMainWindow, QMessageBox
+
 from PySide6.QtGui import QIcon
-import os
 
 from gui.w_empty import WEmpty
 from gui.w_import import WImport
@@ -13,6 +12,7 @@ from lib.project_data import ProjectData
 class MainWindow (QMainWindow):
     def __init__(self) -> None:
         super().__init__()
+
         
         self.setWindowTitle("CIP Safety - L5X TO XLD")
         self.setFixedSize(1100, 800)

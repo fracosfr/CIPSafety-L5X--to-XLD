@@ -1,6 +1,6 @@
 from PySide6.QtWidgets import QPushButton, QLabel, QVBoxLayout
 from PySide6.QtGui import QIcon
-from PySide6.QtCore import QSize, Qt, QRect
+from PySide6.QtCore import QSize, Qt
 
 
 class HomeButton(QPushButton):
