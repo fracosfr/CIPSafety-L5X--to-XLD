@@ -126,5 +126,6 @@ class WImport(QWidget):
         self._data.project_name = self.txt_nom_projet.text()
         if not self._data.project_name:
             self._data.project_name = "New project"
-            
+        
+        self._data.initialise()
         self.signal_start_project.emit(self._data)

@@ -7,11 +7,17 @@ class ProjectData():
         self.file = file
         self.project_name = "New project"
         self.modules: list[ProjectDataModule] = []
-        self.prefix_sdi = "Safety_inputs"
-        self.prefix_sdo = "Safety_outputs"
-        self.prefix_di = "Inputs"
-        self.prefix_do = "Outputs"
+        self.prefix_sdi = "SDI"
+        self.prefix_sdo = "SDO"
+        self.prefix_di = "DI"
+        self.prefix_do = "DO"
     
+    def initialise(self):
+        self.prefix_sdi = self.project_name.replace(" ", "_") + "_SAFE"
+        self.prefix_sdo = self.project_name.replace(" ", "_") + "_SAFE"
+        self.prefix_di = self.project_name.replace(" ", "_")
+        self.prefix_do = self.project_name.replace(" ", "_")
+
     def save(self) -> bool:
         data_json = {
             "project": self.project_name,

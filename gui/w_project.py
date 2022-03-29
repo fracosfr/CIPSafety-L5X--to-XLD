@@ -227,7 +227,7 @@ class WProject(Qw.QWidget):
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Free0[{addr.byte}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
 
-            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+            with open(os.path.join(dir_path, f"SDI_{prefix}.xld"), "w") as f:
                 f.write(xld_sdi.generate_xld())
 
             
@@ -246,7 +246,7 @@ class WProject(Qw.QWidget):
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Output.Free1[{addr.byte}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
 
-            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+            with open(os.path.join(dir_path, f"SDO_{prefix}.xld"), "w") as f:
                 f.write(xld_sdi.generate_xld())
 
             
@@ -265,7 +265,7 @@ class WProject(Qw.QWidget):
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Inputs.Free0[{addr.byte}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
 
-            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+            with open(os.path.join(dir_path, f"DI_{prefix}.xld"), "w") as f:
                 f.write(xld_sdi.generate_xld())
 
             
@@ -284,7 +284,7 @@ class WProject(Qw.QWidget):
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Outputs.Free1[{addr.byte}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
 
-            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+            with open(os.path.join(dir_path, f"DO_{prefix}.xld"), "w") as f:
                 f.write(xld_sdi.generate_xld())
 
             Qw.QMessageBox.information(self, "TERMINÉ !", "L'export des données est terminé !")
