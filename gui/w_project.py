@@ -198,8 +198,9 @@ class WProject(Qw.QWidget):
         self._data.save()
 
     def _close_project(self):
-        if Qw.QMessageBox.question(self, "Fermer le projet ?", "Voulez vous fermer le projet ?\n\nToute modification non enregistrée sera perdue.", Qw.QMessageBox.Yes, Qw.QMessageBox.No) == Qw.QMessageBox.Yes:
-            self.signal_close_project.emit()
+        if Qw.QMessageBox.question(self, "Enregistrer le projet ?", "Voulez vous enregistrer le projet avant de le fermer ?", Qw.QMessageBox.Yes, Qw.QMessageBox.No) == Qw.QMessageBox.Yes:
+            self._save_data()
+        self.signal_close_project.emit()
 
     
     def _export(self):
@@ -209,6 +210,7 @@ class WProject(Qw.QWidget):
             # Les SDI
             prefix = self._data.prefix_sdi
             xld_sdi = XldFile(self._data.project_name)
+            index_module = 0
             for module in self._data.modules:
                 add_module = False
                 for addr in module.addresses:
@@ -224,8 +226,9 @@ class WProject(Qw.QWidget):
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Combined_Output_Status.0", output=var))
                             xld_sdi.vars.append(XldVar(var))
                         elif addr.name != "reserved":
-                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Free0[{addr.byte}].{addr.bit}", output=var))
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Free0[{(int(addr.byte) - 2)}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
+                index_module += 1
 
             with open(os.path.join(dir_path, f"SDI_{prefix}.xld"), "w") as f:
                 f.write(xld_sdi.generate_xld())
