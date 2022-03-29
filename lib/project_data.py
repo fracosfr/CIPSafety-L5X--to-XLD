@@ -13,8 +13,8 @@ class ProjectData():
         self.prefix_do = "DO"
     
     def initialise(self):
-        self.prefix_sdi = self.project_name.replace(" ", "_") + "_SAFE"
-        self.prefix_sdo = self.project_name.replace(" ", "_") + "_SAFE"
+        self.prefix_sdi = self.project_name.replace(" ", "_") + "_safe"
+        self.prefix_sdo = self.project_name.replace(" ", "_") + "_safe"
         self.prefix_di = self.project_name.replace(" ", "_")
         self.prefix_do = self.project_name.replace(" ", "_")
 

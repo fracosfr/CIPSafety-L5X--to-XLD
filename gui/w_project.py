@@ -209,13 +209,13 @@ class WProject(Qw.QWidget):
             
             # Les SDI
             prefix = self._data.prefix_sdi
-            xld_sdi = XldFile(self._data.project_name)
+            xld_sdi = XldFile(self._data.project_name + "_safe_inputs")
             index_module = 0
             for module in self._data.modules:
                 add_module = False
                 for addr in module.addresses:
                     if addr.type == "SAFE INPUT":
-                        var = f"{prefix}_{addr.label.upper()}"
+                        var = f"{prefix}_{addr.label.upper()}".replace(" ", "").replace(".", "_")
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
@@ -236,12 +236,12 @@ class WProject(Qw.QWidget):
             
             # Les SDO
             prefix = self._data.prefix_sdo
-            xld_sdi = XldFile(self._data.project_name)
+            xld_sdi = XldFile(self._data.project_name + "_safe_outputs")
             for module in self._data.modules:
                 add_module = False
                 for addr in module.addresses:
                     if addr.type == "SAFE OUTPUT":
-                        var = f"{prefix}_{addr.label.upper()}"
+                        var = f"{prefix}_{addr.label.upper()}".replace(" ", "").replace(".", "_")
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
@@ -255,12 +255,12 @@ class WProject(Qw.QWidget):
             
             # Les DI
             prefix = self._data.prefix_di
-            xld_sdi = XldFile(self._data.project_name)
+            xld_sdi = XldFile(self._data.project_name + "_inputs")
             for module in self._data.modules:
                 add_module = False
                 for addr in module.addresses:
                     if addr.type == "INPUT":
-                        var = f"{prefix}_{addr.label.upper()}"
+                        var = f"{prefix}_{addr.label.upper()}".replace(" ", "").replace(".", "_")
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
@@ -274,12 +274,12 @@ class WProject(Qw.QWidget):
             
              # Les DO
             prefix = self._data.prefix_do
-            xld_sdi = XldFile(self._data.project_name)
+            xld_sdi = XldFile(self._data.project_name + "_outputs")
             for module in self._data.modules:
                 add_module = False
                 for addr in module.addresses:
                     if addr.type == "OUTPUT":
-                        var = f"{prefix}_{addr.label.upper()}"
+                        var = f"{prefix}_{addr.label.upper()}".replace(" ", "").replace(".", "_")
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
