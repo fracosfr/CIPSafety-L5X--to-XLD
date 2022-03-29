@@ -1,0 +1,38 @@
+QPushButton{
+    background-color: none;
+    border: 1px solid #CCCCCC;
+    border-radius: 5px;
+    padding: 6px 10px;
+}
+
+QPushButton::hover{
+    background-color: #e4e4e4;
+}
+
+QPushButton::pressed{
+    background-color: #c7c7c7;
+}
+
+
+QPushButton#red{
+    background-color: rgb(255, 130, 130);
+    border-color: rgb(224, 99, 99);
+}
+
+
+QPushButton#red::hover{
+    background-color: rgb(255, 109, 109);
+}
+
+QPushButton#red::pressed{
+    background-color: rgb(228, 97, 97);
+}
+
+QLabel#title{
+    font-size:20pt;
+    font-weight:bold;
+}
+
+QLineEdit#title{
+    font-size:18pt;
+}
