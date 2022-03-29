@@ -1,10 +1,14 @@
-from audioop import add
+
+
 from PySide6 import QtWidgets as Qw
 from PySide6.QtCore import Qt, Signal, QSize
 from PySide6.QtGui import QIcon
+from fun import asset_file
 
 from lib.project_data import ProjectData, ProjectDataModule, ProjectDataAddress
+from lib.xld_file import XldFile, XldLine, XldVar
 
+import os
 
 class WProject(Qw.QWidget):
     signal_close_project = Signal()
@@ -23,24 +27,24 @@ class WProject(Qw.QWidget):
         self.lbl_project_name = Qw.QLabel(self._data.project_name)
         self.lbl_project_name.setObjectName("title")
         self.row_head.addWidget(self.lbl_project_name)
-        self.btn_edit_project_name = Qw.QPushButton(icon=QIcon("assets/edit.svg"))
+        self.btn_edit_project_name = Qw.QPushButton(icon=QIcon(asset_file("edit.svg")))
         self.btn_edit_project_name.setIconSize(QSize(20, 20))
-        self.btn_save = Qw.QPushButton(icon=QIcon("assets/save.svg"))
+        self.btn_save = Qw.QPushButton(icon=QIcon(asset_file("save.svg")))
         self.btn_save.setIconSize(QSize(30, 30))
-        self.btn_export = Qw.QPushButton(icon=QIcon("assets/export.svg"))
+        self.btn_export = Qw.QPushButton(icon=QIcon(asset_file("export.svg")))
         self.btn_export.setIconSize(QSize(30, 30))
-        self.btn_new = Qw.QPushButton(icon=QIcon("assets/new.svg"))
+        self.btn_new = Qw.QPushButton(icon=QIcon(asset_file("new.svg")))
         self.btn_new.setIconSize(QSize(30, 30))
-        self.btn_close = Qw.QPushButton(icon=QIcon("assets/close.svg"))
+        self.btn_close = Qw.QPushButton(icon=QIcon(asset_file("close.svg")))
         self.btn_close.setIconSize(QSize(30, 30))
-        self.btn_open = Qw.QPushButton(icon=QIcon("assets/open.svg"))
+        self.btn_open = Qw.QPushButton(icon=QIcon(asset_file("open.svg")))
         self.btn_open.setIconSize(QSize(30, 30))
-        self.btn_reload = Qw.QPushButton(icon=QIcon("assets/load.svg"))
+        self.btn_reload = Qw.QPushButton(icon=QIcon(asset_file("load.svg")))
         self.btn_reload.setIconSize(QSize(30, 30))
         self.row_head.addWidget(self.btn_edit_project_name)
         self.row_head.addStretch()
-        self.row_head.addWidget(self.btn_new)
-        self.row_head.addWidget(self.btn_open)
+        # self.row_head.addWidget(self.btn_new)
+        # self.row_head.addWidget(self.btn_open)
         self.row_head.addWidget(self.btn_reload)
         self.row_head.addWidget(self.btn_save)
         self.row_head.addWidget(self.btn_export)
@@ -82,6 +86,10 @@ class WProject(Qw.QWidget):
         
         # Buttons actions
         self.btn_edit_project_name.clicked.connect(self._change_project_name)
+        self.btn_reload.clicked.connect(self._load_data)
+        self.btn_save.clicked.connect(self._save_data)
+        self.btn_close.clicked.connect(self._close_project)
+        self.btn_export.clicked.connect(self._export)
         
         # Dynamic save inpus values
         self.txt_prefix_sdi.textChanged.connect(self._save_sdi_prefix)
@@ -154,7 +162,7 @@ class WProject(Qw.QWidget):
                 cell_type.setFlags(Qt.ItemIsSelectable)
                 cell_name.setFlags(Qt.ItemIsSelectable)
                 
-                if addr.name in ("cos", "cis", "reserved"):
+                if addr.name in ("reserved"):
                     cell_value.setFlags(Qt.ItemIsSelectable)
                 
                 self.table_data.setItem(index, 0, cell_address)
@@ -182,3 +190,101 @@ class WProject(Qw.QWidget):
                     index += 1
                 self._list_addresses(index_module)
             
+    def _save_data(self):
+        if not self._data.file:
+            file_path, result = Qw.QFileDialog.getSaveFileName(self, "Enregistrer le projet sous", "", "Projet L5X TO XLD (*.l5x2xld)")
+            if result:
+                self._data.file = file_path
+        self._data.save()
+
+    def _close_project(self):
+        if Qw.QMessageBox.question(self, "Fermer le projet ?", "Voulez vous fermer le projet ?\n\nToute modification non enregistrée sera perdue.", Qw.QMessageBox.Yes, Qw.QMessageBox.No) == Qw.QMessageBox.Yes:
+            self.signal_close_project.emit()
+
+    
+    def _export(self):
+        dir_path = Qw.QFileDialog.getExistingDirectory(self, "Enregistrer les fichiers dans :")
+        if dir_path:
+            
+            # Les SDI
+            prefix = self._data.prefix_sdi
+            xld_sdi = XldFile(self._data.project_name)
+            for module in self._data.modules:
+                add_module = False
+                for addr in module.addresses:
+                    if addr.type == "SAFE INPUT":
+                        var = f"{prefix}_{addr.label.upper()}"
+                        if not add_module:
+                            xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
+                            add_module = True
+                        if addr.name == "cis":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Combined_Input_Status.0", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+                        elif addr.name == "cos":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Combined_Output_Status.0", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+                        elif addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Input.Free0[{addr.byte}].{addr.bit}", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+
+            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+                f.write(xld_sdi.generate_xld())
+
+            
+            # Les SDO
+            prefix = self._data.prefix_sdo
+            xld_sdi = XldFile(self._data.project_name)
+            for module in self._data.modules:
+                add_module = False
+                for addr in module.addresses:
+                    if addr.type == "SAFE OUTPUT":
+                        var = f"{prefix}_{addr.label.upper()}"
+                        if not add_module:
+                            xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
+                            add_module = True
+                        elif addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Output.Free1[{addr.byte}].{addr.bit}", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+
+            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+                f.write(xld_sdi.generate_xld())
+
+            
+            # Les DI
+            prefix = self._data.prefix_di
+            xld_sdi = XldFile(self._data.project_name)
+            for module in self._data.modules:
+                add_module = False
+                for addr in module.addresses:
+                    if addr.type == "INPUT":
+                        var = f"{prefix}_{addr.label.upper()}"
+                        if not add_module:
+                            xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
+                            add_module = True
+                        elif addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Inputs.Free0[{addr.byte}].{addr.bit}", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+
+            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+                f.write(xld_sdi.generate_xld())
+
+            
+             # Les DO
+            prefix = self._data.prefix_do
+            xld_sdi = XldFile(self._data.project_name)
+            for module in self._data.modules:
+                add_module = False
+                for addr in module.addresses:
+                    if addr.type == "OUTPUT":
+                        var = f"{prefix}_{addr.label.upper()}"
+                        if not add_module:
+                            xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
+                            add_module = True
+                        elif addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Outputs.Free1[{addr.byte}].{addr.bit}", output=var))
+                            xld_sdi.vars.append(XldVar(var))
+
+            with open(os.path.join(dir_path, f"{prefix}.xld"), "w") as f:
+                f.write(xld_sdi.generate_xld())
+
+            Qw.QMessageBox.information(self, "TERMINÉ !", "L'export des données est terminé !")

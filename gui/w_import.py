@@ -68,7 +68,7 @@ class WImport(QWidget):
                 if module.name != "reserved":
                     addrs = []
                     for ad in module.values:
-                        addrs.append(ProjectDataAddress("SAFETY", module.operand + ad.operand, ad.name, module.name[:9]))
+                        addrs.append(ProjectDataAddress("SAFE INPUT", module.operand, ad.operand[1:], ad.name, module.name[:9]))
 
                     if not modules.get(module.name):
                         modules[module.name] = ProjectDataModule(module.name, addrs)
@@ -79,7 +79,7 @@ class WImport(QWidget):
                 if module.name != "reserved":
                     addrs = []
                     for ad in module.values:
-                        addrs.append(ProjectDataAddress("SAFETY", module.operand + ad.operand, ad.name, module.name[:9]))
+                        addrs.append(ProjectDataAddress("SAFE OUTPUT", module.operand, ad.operand[1:], ad.name, module.name[:9]))
                     
                     if not modules.get(module.name):
                         modules[module.name] = ProjectDataModule(module.name, addrs)
@@ -90,7 +90,7 @@ class WImport(QWidget):
                 if module.name != "reserved":
                     addrs = []
                     for ad in module.values:
-                        addrs.append(ProjectDataAddress("PROCESS", module.operand + ad.operand, ad.name, module.name[:9]))
+                        addrs.append(ProjectDataAddress("INPUT", module.operand, ad.operand[1:], ad.name, module.name[:9]))
                     
                     if not modules.get(module.name):
                         modules[module.name] = ProjectDataModule(module.name, addrs)
@@ -101,7 +101,7 @@ class WImport(QWidget):
                 if module.name != "reserved":
                     addrs = []
                     for ad in module.values:
-                        addrs.append(ProjectDataAddress("PROCESS", module.operand + ad.operand, ad.name, module.name[:9]))
+                        addrs.append(ProjectDataAddress("OUTPUT", module.operand, ad.operand[1:], ad.name, module.name[:9]))
                     
                     if not modules.get(module.name):
                         modules[module.name] = ProjectDataModule(module.name, addrs)

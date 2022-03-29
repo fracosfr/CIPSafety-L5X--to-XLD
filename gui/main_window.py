@@ -1,10 +1,14 @@
-from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton
+from PySide6.QtWidgets import QMainWindow, QVBoxLayout, QHBoxLayout, QPushButton, QMessageBox
 from PySide6.QtCore import Qt
+from PySide6.QtGui import QIcon
+import os
 
 from gui.w_empty import WEmpty
 from gui.w_import import WImport
 from gui.w_project import WProject
+from fun import  asset_file
 from lib.project_data import ProjectData
+
 
 class MainWindow (QMainWindow):
     def __init__(self) -> None:
@@ -12,19 +16,23 @@ class MainWindow (QMainWindow):
         
         self.setWindowTitle("CIP Safety - L5X TO XLD")
         self.setFixedSize(1100, 800)
+        path_to_dat = asset_file("icon.ico")
+        self.setWindowIcon(QIcon(path_to_dat))
+        print(path_to_dat)
                 
         # Show main content
         self._show_empty_page()
-        
-        
-        
         
         
     def _empty_new_project(self, file:str):
         self._show_import_page(file)
         
     def _empty_open_project(self, file:str):
-        print(file)
+        data = ProjectData(file)
+        if data.load():
+            self._show_project_page(data)
+        else:
+            QMessageBox.critical(self, "ERREUR !", "Une erreur est survenue lors de la lecture du projet.")
         
     def _import_canceled_signal(self):
         self._show_empty_page()

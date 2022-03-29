@@ -1,6 +1,7 @@
 from PySide6.QtWidgets import QWidget, QLabel, QVBoxLayout, QPushButton, QHBoxLayout, QFileDialog
 from PySide6.QtCore import Qt, Signal
 from PySide6.QtGui import QIcon
+from fun import asset_file
 
 from gui.widgets import HomeButton
 
@@ -12,8 +13,8 @@ class WEmpty(QWidget):
     def __init__(self, parent) -> None:
         super().__init__(parent)
 
-        self.btn_new_project = HomeButton(QIcon("assets/new.svg"), "Nouveau projet")
-        self.btn_open_project = HomeButton(QIcon("assets/open.svg"), "Ouvrir un projet")
+        self.btn_new_project = HomeButton(QIcon(asset_file("new.svg")), "Nouveau projet")
+        self.btn_open_project = HomeButton(QIcon(asset_file("open.svg")), "Ouvrir un projet")
 
         self.row = QHBoxLayout(self)
         self.row.setAlignment(Qt.AlignCenter)
@@ -31,4 +32,7 @@ class WEmpty(QWidget):
             self.signal_new_project.emit(file_path)
 
     def _open_project_button_action(self):
-        self.signal_open_project.emit("")
+        file_path, result = QFileDialog.getOpenFileName(
+            self, "Charger un projet existant", "", "Projet L5X TO XLD (*.l5x2xld)")
+        if result:
+            self.signal_open_project.emit(file_path)
