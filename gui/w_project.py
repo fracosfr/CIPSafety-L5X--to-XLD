@@ -1,6 +1,6 @@
 
 from PySide6 import QtWidgets as Qw
-from PySide6.QtCore import Qt, Signal, QSize
+from PySide6.QtCore import Qt, Signal, QSize, QUrl
 from PySide6.QtGui import QIcon, QColor
 from fun import asset_file
 
@@ -122,11 +122,11 @@ class WProject(Qw.QWidget):
             i.module = module
             self.list_modules.addItem(i)
 
-        self.lbl_count_sdi.setText(str(len(self._data.l5x_file.sdi))+ "BYTES")
-        self.lbl_count_sdo.setText(str(len(self._data.l5x_file.sdo))+ "BYTES")
-        self.lbl_count_di.setText(str(len(self._data.l5x_file.di))+ "BYTES")
-        self.lbl_count_do.setText(str(len(self._data.l5x_file.do))+ "BYTES")
-            
+        self.lbl_count_sdi.setText(f"{self._data.count_sdi} BYTES")
+        self.lbl_count_sdo.setText(f"{self._data.count_sdo} BYTES")
+        self.lbl_count_di.setText(f"{self._data.count_di} BYTES")
+        self.lbl_count_do.setText(f"{self._data.count_do} BYTES")
+        
         self._list_addresses(-1)
 
     def _change_project_name(self):
@@ -242,7 +242,7 @@ class WProject(Qw.QWidget):
             
     def _save_data(self):
         if not self._data.file:
-            file_path, result = Qw.QFileDialog.getSaveFileName(self, "Enregistrer le projet sous", "", "Projet L5X TO XLD (*.l5x2xld)")
+            file_path, result = Qw.QFileDialog.getSaveFileName(self, "Enregistrer le projet sous", "", "Projet L5X TO XLD (*.l5x2xld)", "Projet L5X TO XLD (*.l5x2xld)")
             if result:
                 self._data.file = file_path
         self._data.save()

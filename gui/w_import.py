@@ -60,7 +60,10 @@ class WImport(QWidget):
             
             # Loading L5X FILE
             l5x = L5xFile(l5x_file)
-            self._data.l5x_file = l5x
+            self._data.count_sdi = len(l5x.sdi)
+            self._data.count_sdo = len(l5x.sdo)
+            self._data.count_di = len(l5x.di)
+            self._data.count_do = len(l5x.do)
             
             modules: dict[ProjectDataModule] = {}
             

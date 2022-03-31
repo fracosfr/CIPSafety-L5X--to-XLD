@@ -11,7 +11,10 @@ class ProjectData():
         self.prefix_sdo = "SDO"
         self.prefix_di = "DI"
         self.prefix_do = "DO"
-        self.l5x_file = L5xFile("")
+        self.count_sdi = 0
+        self.count_sdo = 0
+        self.count_di = 0
+        self.count_do = 0
     
     def initialise(self):
         self.prefix_sdi = self.project_name.replace(" ", "_") + "_safe"
@@ -28,9 +31,17 @@ class ProjectData():
                 "DI": self.prefix_di,
                 "DO": self.prefix_do,
             },
+            "count":{
+                "SDI": self.count_sdi,
+                "SDO": self.count_sdo,
+                "DI": self.count_di,
+                "DO": self.count_do,
+            },
             "modules": [o.get_data() for o in self.modules]
         }
         try:
+            if not self.file.endswith(".l5x2xld") and self.file:
+                self.file += ".l5x2xld"
             with open(self.file, "w") as f:
                 json.dump(data_json, f, indent=4)
             return True
@@ -40,12 +51,12 @@ class ProjectData():
     def load(self) -> bool:
         try:
             with open(self.file, "r") as f:
-                data = json.load(f)
-                if data["project"]:
+                data: dict = json.load(f)
+                if "project" in data.keys():
                     self.project_name = data["project"]
                 
                 
-                if data["prefix"]:
+                if "prefix" in data.keys():
                     prefix_db = data["prefix"]
                     if prefix_db["SDI"]:
                         self.prefix_sdi = prefix_db["SDI"]
@@ -55,8 +66,19 @@ class ProjectData():
                         self.prefix_di = prefix_db["DI"]
                     if prefix_db["DO"]:
                         self.prefix_do = prefix_db["DO"]
+                        
+                if "count" in data.keys():
+                    count_db: dict = data["count"]
+                    if "SDI" in count_db.keys():
+                        self.count_sdi = count_db["SDI"]
+                    if "SDO" in count_db.keys():
+                        self.count_sdo = count_db["SDO"]
+                    if "DI" in count_db.keys():
+                        self.count_di = count_db["DI"]
+                    if "DO" in count_db.keys():
+                        self.count_do = count_db["DO"]
                 
-                if data["modules"]:
+                if "modules" in data.keys():
                     for module_db in data["modules"]:
                         address: list[ProjectDataAddress] = []
                         module_name = "ERROR"
