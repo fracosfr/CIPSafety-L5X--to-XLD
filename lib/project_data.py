@@ -1,5 +1,5 @@
 import json
-
+from .l5x_file import L5xFile
 
 
 class ProjectData():
@@ -11,6 +11,7 @@ class ProjectData():
         self.prefix_sdo = "SDO"
         self.prefix_di = "DI"
         self.prefix_do = "DO"
+        self.l5x_file = L5xFile("")
     
     def initialise(self):
         self.prefix_sdi = self.project_name.replace(" ", "_") + "_safe"

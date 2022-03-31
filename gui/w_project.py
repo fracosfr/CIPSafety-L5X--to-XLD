@@ -53,17 +53,27 @@ class WProject(Qw.QWidget):
         self.grid_settings = Qw.QGridLayout()
         self.grid_settings.addWidget(Qw.QLabel("Entrées SAFETY :"), 0, 0)
         self.grid_settings.addWidget(Qw.QLabel("Sorties SAFETY :"), 1, 0)
-        self.grid_settings.addWidget(Qw.QLabel("Entrées PROCESS :"), 0, 2)
-        self.grid_settings.addWidget(Qw.QLabel("Sorties PROCESS :"), 1, 2)
+        self.grid_settings.addWidget(Qw.QLabel("Entrées PROCESS :"), 0, 3)
+        self.grid_settings.addWidget(Qw.QLabel("Sorties PROCESS :"), 1, 3)
         self.txt_prefix_sdi = Qw.QLineEdit(self._data.prefix_sdi)
         self.txt_prefix_sdo = Qw.QLineEdit(self._data.prefix_sdo)
         self.txt_prefix_di = Qw.QLineEdit(self._data.prefix_di)
         self.txt_prefix_do = Qw.QLineEdit(self._data.prefix_do)
-        self.grid_settings.addWidget(self.txt_prefix_sdi, 0, 1)
-        self.grid_settings.addWidget(self.txt_prefix_sdo, 1, 1)
-        self.grid_settings.addWidget(self.txt_prefix_di, 0, 3)
-        self.grid_settings.addWidget(self.txt_prefix_do, 1, 3)
+        self.grid_settings.addWidget(self.txt_prefix_sdi, 0, 2)
+        self.grid_settings.addWidget(self.txt_prefix_sdo, 1, 2)
+        self.grid_settings.addWidget(self.txt_prefix_di, 0, 5)
+        self.grid_settings.addWidget(self.txt_prefix_do, 1, 5)
         self.group_settings.setLayout(self.grid_settings)
+
+        self.lbl_count_sdi = Qw.QLabel()
+        self.lbl_count_sdo = Qw.QLabel()
+        self.lbl_count_di = Qw.QLabel()
+        self.lbl_count_do = Qw.QLabel()
+
+        self.grid_settings.addWidget(self.lbl_count_sdi, 0, 1)
+        self.grid_settings.addWidget(self.lbl_count_sdo, 1, 1)
+        self.grid_settings.addWidget(self.lbl_count_di, 0, 4)
+        self.grid_settings.addWidget(self.lbl_count_do, 1, 4)
 
         self.row_content = Qw.QHBoxLayout()
         self.row_content.setAlignment(Qt.AlignLeft)
@@ -111,6 +121,11 @@ class WProject(Qw.QWidget):
             i = Qw.QListWidgetItem(module.name)
             i.module = module
             self.list_modules.addItem(i)
+
+        self.lbl_count_sdi.setText(str(len(self._data.l5x_file.sdi))+ "BYTES")
+        self.lbl_count_sdo.setText(str(len(self._data.l5x_file.sdo))+ "BYTES")
+        self.lbl_count_di.setText(str(len(self._data.l5x_file.di))+ "BYTES")
+        self.lbl_count_do.setText(str(len(self._data.l5x_file.do))+ "BYTES")
             
         self._list_addresses(-1)
 
