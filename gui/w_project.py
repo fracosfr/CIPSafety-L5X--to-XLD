@@ -292,11 +292,12 @@ class WProject(Qw.QWidget):
                 for addr in module.addresses:
                     if addr.type == "SAFE OUTPUT":
                         var = f"{prefix}_{addr.label.upper()}".replace(" ", "").replace(".", "_")
+                        print(f"{prefix}.Output.Free1[{addr.byte}].{addr.bit} : {var}")
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
-                        elif addr.name != "reserved":
-                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Output.Free1[{addr.byte}].{addr.bit}", output=var))
+                        if addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(output=f"{prefix}.Output.Free1[{addr.byte}].{addr.bit}", input=var))
                             xld_sdi.vars.append(XldVar(var))
 
             with open(os.path.join(dir_path, f"SDO_{prefix}.xld"), "w") as f:
@@ -314,7 +315,7 @@ class WProject(Qw.QWidget):
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
-                        elif addr.name != "reserved":
+                        if addr.name != "reserved":
                             xld_sdi.lines.append(XldLine(input=f"{prefix}.Inputs.Free0[{addr.byte}].{addr.bit}", output=var))
                             xld_sdi.vars.append(XldVar(var))
 
@@ -333,8 +334,8 @@ class WProject(Qw.QWidget):
                         if not add_module:
                             xld_sdi.lines.append(XldLine(isComment=True, text=module.name))
                             add_module = True
-                        elif addr.name != "reserved":
-                            xld_sdi.lines.append(XldLine(input=f"{prefix}.Outputs.Free1[{addr.byte}].{addr.bit}", output=var))
+                        if addr.name != "reserved":
+                            xld_sdi.lines.append(XldLine(output=f"{prefix}.Outputs.Free1[{addr.byte}].{addr.bit}", input=var))
                             xld_sdi.vars.append(XldVar(var))
 
             with open(os.path.join(dir_path, f"DO_{prefix}.xld"), "w") as f:
